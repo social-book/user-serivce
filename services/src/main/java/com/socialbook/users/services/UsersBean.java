@@ -44,4 +44,11 @@ public class UsersBean {
         }
         return user;
     }
+
+    public List<User> getFriends(Integer userId) {
+        em.createNamedQuery("User.getUserFriends").setParameter("user_id", userId);
+        User user = em.find(User.class, userId);
+        if (user == null) throw new NotFoundException();
+        return user.getFriends();
+    }
 }

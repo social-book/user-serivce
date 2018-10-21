@@ -1,4 +1,6 @@
 .idea/
 target/
-socialbookuserservice.iml
-models/models.iml
+api/target/
+models/target/
+services/target/
+*.iml
