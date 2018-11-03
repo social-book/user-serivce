@@ -10,7 +10,8 @@ import java.util.List;
         @NamedQuery(name = "User.getOne", query = "SELECT u from user_table u where u.user_id = :id"),
         @NamedQuery(name = "User.getFemales", query = "SELECT u from user_table u WHERE u.gender = :gender"),
         @NamedQuery(name = "User.getUserFriends",
-                query = "SELECT user FROM user_table user WHERE user.user_id = :user_id")
+                query = "SELECT user FROM user_table user WHERE user.user_id = :user_id"),
+        @NamedQuery(name = "User.getUserByUsername", query = "SELECT u from user_table u WHERE u.username = :username")
 })
 public class User {
 

@@ -23,6 +23,8 @@
         <kumuluzee.version>3.0.0</kumuluzee.version>
         <postgresql.version>42.2.5</postgresql.version>
         <kumuluzeerest.version>1.2.3</kumuluzeerest.version>
+        <kumuluzee-config.version>1.1.0</kumuluzee-config.version>
+        <kumuluzee-discovery.version>1.1.0</kumuluzee-discovery.version>
     </properties>
 
     <dependencyManagement>
@@ -61,32 +63,18 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <!--<dependencies>-->
 
-        <!--<dependency>-->
-            <!--<groupId>com.kumuluz.ee.rest</groupId>-->
-            <!--<artifactId>kumuluzee-rest-core</artifactId>-->
-            <!--<version>${kumuluzeerest.version}</version>-->
-        <!--</dependency>-->
-
-    <!--</dependencies>-->
-    <!--<build>-->
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>com.kumuluz.ee</groupId>-->
-                <!--<artifactId>kumuluzee-maven-plugin</artifactId>-->
-                <!--<version>${kumuluzee.version}</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>package</id>-->
-                        <!--<goals>-->
-                            <!--<goal>repackage</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
-
+    <dependencies>
+        <dependency>
+            <groupId>com.kumuluz.ee.discovery</groupId>
+            <artifactId>kumuluzee-discovery-etcd</artifactId>
+            <version>${kumuluzee-discovery.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>kumuluzee-config-etcd</artifactId>
+            <groupId>com.kumuluz.ee.config</groupId>
+            <version>${kumuluzee-config.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
