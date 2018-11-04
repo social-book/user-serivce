@@ -6,6 +6,6 @@ WORKDIR /app
 
 #ADD ./api/target/
 
-EXPOSE 8080
+EXPOSE 8083
 
 #CMD java -jar

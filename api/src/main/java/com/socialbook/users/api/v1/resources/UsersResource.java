@@ -64,15 +64,24 @@ public class UsersResource {
     }
 
     @PUT
-    @Path("/addFriend/{userId}/{friendId}")
+    @Path("/add/{userId}/{friendId}")
     public Response addFriend(@PathParam("userId") Integer userId,
                               @PathParam("friendId") Integer friendId) {
         Boolean success = usersBean.addFriend(userId, friendId);
         if (success) {
-            return Response.status(Response.Status.ACCEPTED).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
-    //DELETE FRIEND
+    @DELETE
+    @Path("/remove/{userId}/{friendId}")
+    public Response removeFriend(@PathParam("userId") Integer userId,
+                                 @PathParam("friendId") Integer friendId) {
+        Boolean success = usersBean.removeFriend(userId, friendId);
+        if (success) {
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }

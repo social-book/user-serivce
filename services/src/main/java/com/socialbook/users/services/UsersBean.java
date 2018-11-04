@@ -110,4 +110,21 @@ public class UsersBean {
 
         return true;
     }
+
+    @Transactional
+    public Boolean removeFriend(Integer userId, Integer friendId) {
+        em.getTransaction().begin();
+        User user = em.find(User.class, userId);
+        User friend = em.find(User.class, friendId);
+        if (user == null || friend == null) {
+            em.getTransaction().rollback();
+            return false;
+        }
+        List<User> friends = user.getFriends();
+        friends.removeIf(t -> t.getId().equals(friendId));
+        user.setFriends(friends);
+        em.merge(user);
+        em.getTransaction().commit();
+        return true;
+    }
 }
