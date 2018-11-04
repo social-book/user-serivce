@@ -1,7 +1,10 @@
 package com.socialbook.users.services;
 
 import com.socialbook.users.entities.User;
+import com.socialbook.users.services.configuration.AppProperties;
+
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,6 +24,9 @@ public class UsersBean {
     @PersistenceContext(unitName = "user-service-jpa")
     private EntityManager em;
 
+
+    @Inject
+    AppProperties appProperties;
 
     public List<UserDto> getUsers() {
         log.info("getting all users");
@@ -91,6 +97,9 @@ public class UsersBean {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public Boolean addFriend(Integer userId, Integer friendId) {
+        if (appProperties.isStatisticServiceEnabled()) {
+            log.info("statistic is available");
+        } else log.info("statistic is disabled");
         log.info("finding user");
         User user = em.find(User.class, userId);
         log.info("finding friend");
