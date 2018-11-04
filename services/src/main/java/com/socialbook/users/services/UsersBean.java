@@ -1,28 +1,19 @@
 package com.socialbook.users.services;
 
-//import com.kumuluz.ee.rest.beans.QueryParameters;
-//import com.kumuluz.ee.rest.utils.JPAUtils;
-
 import com.socialbook.users.entities.User;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 
-@ApplicationScoped
+@RequestScoped
 public class UsersBean {
 
     private Logger log = Logger.getLogger(UsersBean.class.getName());
@@ -32,99 +23,128 @@ public class UsersBean {
 
 
     public List<UserDto> getUsers() {
+        log.info("getting all users");
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
         Root<User> from = query.from(User.class);
         query.select(from);
         List<User> users = em.createQuery(query).getResultList();
+        log.info("returning all users");
         return Mapper.convertToUserDtos(users);
     }
 
-    public UserDto getUser(Integer userId) {
-        User user = em.find(User.class, userId);
-        if (user == null) {
-            throw new NotFoundException();
-        }
-        return Mapper.convertToDto(user);
-    }
-
     public List<UserDto> getFriends(Integer userId) {
+        log.info("searching friends");
         User user = em.find(User.class, userId);
         if (user == null) throw new NotFoundException();
         UserDto userDtos = Mapper.convertToDto(user);
+        log.info("returning friends");
         return userDtos.getFriends();
     }
 
-    public UserDto validateLogin(UserDto userDto) { //FIXME you don't get ID!!!!!
+    public UserDto validateLogin(UserDto userDto) {
+        log.info("checking for user if exists");
         List<User> users = em.createNamedQuery("User.getUserByUsername").setParameter("username", userDto.getUsername()).getResultList();
         if (users == null) return null;
         User user = users.get(0);
         if (user.getUsername().equals(userDto.getUsername()) &&
                 user.getPassword().equals(userDto.getPassword())) {
+            log.info("user exists password and username are correct");
             return Mapper.convertToDto(user);
         }
+        log.info("username or passwords does not match");
         return null;
     }
 
-    //    @Transactional(Transactional.TxType.REQUIRED)
+    @Transactional(Transactional.TxType.REQUIRED)
     public UserDto registerUser(UserDto userDto) {
-        em.getTransaction().begin();
+        log.info("beginning of transaction");
+        beginTx();
         User user = new User();
-        if (userDto.getGender() == null) return null;
+        if (userDto.getGender() == null) {
+            log.info("gender is not set... rolling back");
+            rollbackTx();
+            return null;
+        }
         user.setGender(userDto.getGender());
-
-        if (userDto.getPassword() == null) return null;
+        if (userDto.getPassword() == null) {
+            log.info("pass not set rolling back");
+            rollbackTx();
+            return null;
+        }
         user.setPassword(userDto.getPassword());
-
-        if (userDto.getUsername() == null) return null;
+        if (userDto.getUsername() == null) {
+            log.info("username not set rolling back");
+            rollbackTx();
+            return null;
+        }
         user.setUsername(userDto.getUsername());
-
         user.setFriends(null);
+        log.info("persisting user");
         em.persist(user);
-        em.flush();
-        em.getTransaction().commit();
+        commitTx();
+        log.info("transaction committed");
         if (user.getId() != null)
-            return Mapper.convertToDto(user); //TODO check if userID is properly set!
+            return Mapper.convertToDto(user);
         return null;
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public Boolean addFriend(Integer userId, Integer friendId) {
-        em.getTransaction().begin();
+        log.info("finding user");
         User user = em.find(User.class, userId);
+        log.info("finding friend");
         User friend = em.find(User.class, friendId);
         if (friend == null || user == null) {
-            em.getTransaction().rollback();
             return false;
         }
         List<User> friends = user.getFriends();
         boolean exists = friends.stream().anyMatch(t -> t.getId().equals(friendId));
         if (exists) {
-            em.getTransaction().rollback();
             return false;
         }
         friends.add(friend);
         user.setFriends(friends);
+        beginTx();
+        log.info("transaction started merging user");
         em.merge(user);
-        em.getTransaction().commit();
-
+        commitTx();
+        log.info("transaction committed");
         return true;
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRED)
     public Boolean removeFriend(Integer userId, Integer friendId) {
-        em.getTransaction().begin();
         User user = em.find(User.class, userId);
         User friend = em.find(User.class, friendId);
+        log.info("user and friend are found");
         if (user == null || friend == null) {
-            em.getTransaction().rollback();
             return false;
         }
         List<User> friends = user.getFriends();
         friends.removeIf(t -> t.getId().equals(friendId));
         user.setFriends(friends);
+        beginTx();
+        log.info("transaction started merging user");
         em.merge(user);
-        em.getTransaction().commit();
+        log.info("committing transaction");
+        commitTx();
         return true;
+    }
+
+
+    private void beginTx() {
+        if (!em.getTransaction().isActive())
+            em.getTransaction().begin();
+    }
+
+    private void commitTx() {
+        if (em.getTransaction().isActive())
+            em.getTransaction().commit();
+    }
+
+    private void rollbackTx() {
+        if (em.getTransaction().isActive())
+            em.getTransaction().rollback();
     }
 }
