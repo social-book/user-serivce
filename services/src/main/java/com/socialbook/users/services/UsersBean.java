@@ -15,8 +15,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 
@@ -88,9 +90,24 @@ public class UsersBean {
 
     @Transactional
     public Boolean addFriend(Integer userId, Integer friendId) {
-//        em.getTransaction().begin();
+        em.getTransaction().begin();
+        User user = em.find(User.class, userId);
+        User friend = em.find(User.class, friendId);
+        if (friend == null || user == null) {
+            em.getTransaction().rollback();
+            return false;
+        }
+        List<User> friends = user.getFriends();
+        boolean exists = friends.stream().anyMatch(t -> t.getId().equals(friendId));
+        if (exists) {
+            em.getTransaction().rollback();
+            return false;
+        }
+        friends.add(friend);
+        user.setFriends(friends);
+        em.merge(user);
+        em.getTransaction().commit();
 
-        return false;
-//        em.getTransaction().commit();
+        return true;
     }
 }
