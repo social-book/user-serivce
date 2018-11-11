@@ -77,9 +77,7 @@ public class User {
 
     @Override
     public String toString() {
-
         return "{ \"name\": \"" + getUsername() + "\", \"gender\": \"" + getGender() + "\"}";
-
     }
 
     public List<User> getFriends() {
