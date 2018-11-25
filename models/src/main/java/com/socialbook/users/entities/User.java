@@ -8,7 +8,6 @@ import java.util.List;
 @NamedQueries(value = {
         @NamedQuery(name = "User.getAll", query = "SELECT u from user_table u"),
         @NamedQuery(name = "User.getOne", query = "SELECT u from user_table u where u.user_id = :id"),
-        @NamedQuery(name = "User.getFemales", query = "SELECT u from user_table u WHERE u.gender = :gender"),
         @NamedQuery(name = "User.getUserFriends",
                 query = "SELECT user FROM user_table user WHERE user.user_id = :user_id"),
         @NamedQuery(name = "User.getUserByUsername", query = "SELECT u from user_table u WHERE u.username = :username")
@@ -26,21 +25,19 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "gender")
-    private String gender;
+    @Column(name = "profileimg")
+    private String profileImg;
+
+    @Column(name = "firstname")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
 
 
     @OneToMany(fetch =  FetchType.LAZY)
     private List<User> friends;
 
-//    @JoinTable(name = "user_table_user_table", joinColumns = {
-//            @JoinColumn(name = "user_id", referencedColumnName = "user_table_user_id", nullable = false)})
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    private List<User> friends = new ArrayList<>();
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id2")
-//    private List<User> friends = new ArrayList<>();
 
 
     public Integer getId() {
@@ -67,17 +64,9 @@ public class User {
         this.password = password;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     @Override
     public String toString() {
-        return "{ \"name\": \"" + getUsername() + "\", \"gender\": \"" + getGender() + "\"}";
+        return "{ \"name\": \"" + getUsername() + "\", \"name\": \"" + getName() + "\"}";
     }
 
     public List<User> getFriends() {
@@ -86,5 +75,29 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public String getProfileImg() {
+        return profileImg;
+    }
+
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 }

@@ -37,12 +37,12 @@ public class UsersResource {
 
     @GET
     @Path("/{userId}")
-    public Response getUsersFriends(@PathParam("userId") Integer userId) {
-        List<UserDto> friends = usersBean.getFriends(userId);
-        if (friends != null) {
-            return Response.ok(friends).build();
+    public Response getUser(@PathParam("userId") Integer userId) {
+        UserDto userDto = usersBean.getUser(userId);
+        if (userDto != null) {
+            return Response.ok(userDto).build();
         }
-        return Response.status(Response.Status.NO_CONTENT).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
@@ -54,6 +54,15 @@ public class UsersResource {
         } else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
+    @GET
+    @Path("/login")
+    public Response loginUserGet(@QueryParam("username") String username, @QueryParam("password") String password) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setPassword(password);
+        return loginUser(userDto);
+    }
+
     @POST
     @Path("/register")
     public Response registerUser(UserDto userDto) {
@@ -61,6 +70,23 @@ public class UsersResource {
         if (registeredUser != null) {
             return Response.ok(registeredUser).build();
         } else return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @GET
+    @Path("/register")
+    public Response registerUserGet(@QueryParam("username") String username,
+                                    @QueryParam("password") String password,
+                                    @QueryParam("name") String name,
+                                    @QueryParam("surname") String surname,
+                                    @QueryParam("imgref") String imgref) {
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setPassword(password);
+        userDto.setName(name);
+        userDto.setSurname(surname);
+        userDto.setImgref(imgref);
+        return registerUser(userDto);
     }
 
     @PUT

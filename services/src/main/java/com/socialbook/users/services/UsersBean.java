@@ -39,6 +39,14 @@ public class UsersBean {
         return Mapper.convertToUserDtos(users);
     }
 
+    //implement posts as gets
+    public UserDto getUser(Integer userId) {
+        log.info("getting user with id:" + userId);
+        User user = em.find(User.class, userId);
+        if (user == null) throw new NotFoundException();
+        return Mapper.convertToDto(user);
+    }
+
     public List<UserDto> getFriends(Integer userId) {
         log.info("searching friends");
         User user = em.find(User.class, userId);
@@ -67,12 +75,9 @@ public class UsersBean {
         log.info("beginning of transaction");
         beginTx();
         User user = new User();
-        if (userDto.getGender() == null) {
-            log.info("gender is not set... rolling back");
-            rollbackTx();
-            return null;
-        }
-        user.setGender(userDto.getGender());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setProfileImg(userDto.getImgref());
         if (userDto.getPassword() == null) {
             log.info("pass not set rolling back");
             rollbackTx();

@@ -10,7 +10,9 @@ public class Mapper {
     public static UserDto convertToDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setUserId(user.getId());
-        userDto.setGender(user.getGender());
+        userDto.setName(user.getName());
+        userDto.setSurname(user.getSurname());
+        userDto.setImgref(user.getProfileImg());
         userDto.setPassword(user.getPassword());
         userDto.setUsername(user.getUsername());
         userDto.setFriends(convertToUserDtosFriends(user.getFriends()));
@@ -20,8 +22,10 @@ public class Mapper {
     private static UserDto convertToDtoFriend(User user) {
         UserDto userDto = new UserDto();
         userDto.setUserId(user.getId());
-        userDto.setGender(user.getGender());
-        userDto.setPassword(user.getPassword());
+        userDto.setImgref(user.getProfileImg());
+        userDto.setName(user.getName());
+        userDto.setSurname(user.getSurname());
+//        userDto.setPassword(user.getPassword());
         userDto.setUsername(user.getUsername());
         return userDto;
     }
@@ -45,7 +49,10 @@ public class Mapper {
     public static User convertToDao(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getUserId());
-        user.setGender(userDto.getGender());
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setProfileImg(userDto.getImgref());
         user.setPassword(userDto.getPassword());
         user.setUsername(userDto.getUsername());
         user.setFriends(convertToUserDaoFriends(userDto.getFriends()));
@@ -57,7 +64,9 @@ public class Mapper {
         user.setId(userDto.getUserId());
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
-        user.setGender(userDto.getGender());
+        user.setProfileImg(userDto.getImgref());
+        user.setSurname(userDto.getSurname());
+        user.setName(userDto.getName());
         return user;
     }
 
