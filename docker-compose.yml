@@ -3,22 +3,11 @@ services:
   postgres: # this is name of localhost when connecting to database, its actually a reference
     image: postgres:10.5
     ports:
-    - 5432:5432
+    - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nejc
-  service-user: #this is the name of container when startin
-    image: user-service
-    ports:
-    - 8083:8083
-    environment:
-      KUMULUZEE_DATASOURCES_CONNECTION-URL: jdbc:postgresql://postgres:5432/nejc
-      KUMULUZEE_CONFIG_ETCD_HOSTS: http://etcd:2379
-      KUMULUZEE_DISCOVERY_ETCD_HOSTS: http://etcd:2379
-    depends_on:
-    - postgres
-    - etcd
   etcd:
     image: quay.io/coreos/etcd:latest
     ports:
@@ -32,3 +21,17 @@ services:
       -listen-peer-urls http://0.0.0.0:2380
       -initial-cluster node1=http://etcd:2380
       -cors="*"
+  service-user: #this is the name of container when starting
+    image: 40850473/service-users:1.0.1
+    ports:
+    - "8083:8083"
+    environment:
+      KUMULUZEE_DATASOURCES0_CONNECTIONURL: jdbc:postgresql://postgres:5432/nejc
+      KUMULUZEE_CONFIG_ETCD_HOSTS: http://etcd:2379
+      KUMULUZEE_DISCOVERY_ETCD_HOSTS: http://etcd:2379
+    depends_on:
+    - postgres
+    - etcd
+#    links:
+#    - postgres
+#    - ectd

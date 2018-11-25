@@ -1,5 +1,6 @@
 package com.socialbook.users.api.v1.resources;
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.socialbook.users.entities.User;
 import com.socialbook.users.services.UserDto;
 import com.socialbook.users.services.UsersBean;
@@ -15,6 +16,7 @@ import java.util.List;
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@CrossOrigin
 public class UsersResource {
 
     @Inject
