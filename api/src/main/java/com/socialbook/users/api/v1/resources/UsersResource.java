@@ -52,7 +52,15 @@ public class UsersResource {
     public Response loginUser(UserDto userDto) {
         UserDto loggedInUser = usersBean.validateLogin(userDto);
         if (loggedInUser != null) {
-            return Response.ok(loggedInUser).build();
+            return Response.ok(loggedInUser)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Headers",
+                            "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Methods",
+                            "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .entity("")
+                    .build();
         } else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
@@ -70,7 +78,15 @@ public class UsersResource {
     public Response registerUser(UserDto userDto) {
         UserDto registeredUser = usersBean.registerUser(userDto);
         if (registeredUser != null) {
-            return Response.ok(registeredUser).build();
+            return Response.ok(registeredUser)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Headers",
+                            "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Methods",
+                            "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .entity("")
+                    .build();
         } else return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
