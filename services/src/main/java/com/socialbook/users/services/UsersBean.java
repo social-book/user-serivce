@@ -58,6 +58,8 @@ public class UsersBean {
 
     public UserDto validateLogin(UserDto userDto) {
         log.info("checking for user if exists");
+        if (userDto == null) return null;
+        log.info("username: " + userDto.getUsername() + " password: " + userDto.getPassword());
         User user = (User) em.createNamedQuery("User.getUserByUsername").setParameter("username", userDto.getUsername()).getSingleResult();
         if (user == null) return null;
         if (user.getUsername().equals(userDto.getUsername()) &&
