@@ -22,12 +22,6 @@ public class UsersResource {
     @Inject
     UsersBean usersBean;
 
-    //GET get all users
-    //GET get users friends
-    //POST register user
-    //POST login user
-    //POST add friend
-
     @GET
     public Response getAllUsers() {
         List<UserDto> users = usersBean.getUsers();
@@ -56,10 +50,9 @@ public class UsersResource {
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Credentials", "true")
                     .header("Access-Control-Allow-Headers",
-                            "origin, content-type, accept, authorization")
+                            "origin, content-type, accept, authorization, body")
                     .header("Access-Control-Allow-Methods",
                             "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .entity("")
                     .build();
         } else return Response.status(Response.Status.UNAUTHORIZED).build();
     }
@@ -82,7 +75,7 @@ public class UsersResource {
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Credentials", "true")
                     .header("Access-Control-Allow-Headers",
-                            "origin, content-type, accept, authorization")
+                            "origin, content-type, accept, authorization, body")
                     .header("Access-Control-Allow-Methods",
                             "GET, POST, PUT, DELETE, OPTIONS, HEAD")
                     .entity("")
