@@ -118,6 +118,13 @@ public class UsersResource {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @GET
+    @Path("/add/{userId}/{friendId}")
+    public Response addFriendGet(@PathParam("userId") Integer userId,
+                                 @PathParam("friendId") Integer friendId) {
+        return addFriend(userId, friendId);
+    }
+
     @DELETE
     @Path("/remove/{userId}/{friendId}")
     public Response removeFriend(@PathParam("userId") Integer userId,
