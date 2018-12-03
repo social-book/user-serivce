@@ -106,7 +106,14 @@ public class UsersResource {
                               @PathParam("friendId") Integer friendId) {
         Boolean success = usersBean.addFriend(userId, friendId);
         if (success) {
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return Response.status(Response.Status.NO_CONTENT).header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Headers",
+                            "origin, content-type, accept, authorization, body")
+                    .header("Access-Control-Allow-Methods",
+                            "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                    .entity("")
+                    .build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
