@@ -64,6 +64,7 @@ public class UsersResource {
         userDto.setUsername(username);
         userDto.setPassword(password);
         return loginUser(userDto);
+
     }
 
     @POST
