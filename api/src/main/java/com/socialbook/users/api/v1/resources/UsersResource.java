@@ -4,6 +4,7 @@ import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.socialbook.users.entities.User;
 import com.socialbook.users.services.UserDto;
 import com.socialbook.users.services.UsersBean;
+import com.socialbook.users.services.interceptors.CollectRequests;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ public class UsersResource {
     UsersBean usersBean;
 
     @GET
+    @CollectRequests
     public Response getAllUsers() {
         List<UserDto> users = usersBean.getUsers();
         if (users != null) {
@@ -33,6 +35,7 @@ public class UsersResource {
 
     @GET
     @Path("/{userId}")
+    @CollectRequests
     public Response getUser(@PathParam("userId") Integer userId) {
         UserDto userDto = usersBean.getUser(userId);
         if (userDto != null) {
@@ -43,6 +46,7 @@ public class UsersResource {
 
     @POST
     @Path("/login")
+    @CollectRequests
     public Response loginUser(UserDto userDto) {
         UserDto loggedInUser = usersBean.validateLogin(userDto);
         if (loggedInUser != null) {
@@ -59,6 +63,7 @@ public class UsersResource {
 
     @GET
     @Path("/login")
+    @CollectRequests
     public Response loginUserGet(@QueryParam("username") String username, @QueryParam("password") String password) {
         UserDto userDto = new UserDto();
         userDto.setUsername(username);
@@ -69,6 +74,7 @@ public class UsersResource {
 
     @POST
     @Path("/register")
+    @CollectRequests
     public Response registerUser(UserDto userDto) {
         UserDto registeredUser = usersBean.registerUser(userDto);
         if (registeredUser != null) {
@@ -86,6 +92,7 @@ public class UsersResource {
 
     @GET
     @Path("/register")
+    @CollectRequests
     public Response registerUserGet(@QueryParam("username") String username,
                                     @QueryParam("password") String password,
                                     @QueryParam("name") String name,
@@ -103,6 +110,7 @@ public class UsersResource {
 
     @PUT
     @Path("/add/{userId}/{friendId}")
+    @CollectRequests
     public Response addFriend(@PathParam("userId") Integer userId,
                               @PathParam("friendId") Integer friendId) {
         Boolean success = usersBean.addFriend(userId, friendId);
@@ -121,6 +129,7 @@ public class UsersResource {
 
     @GET
     @Path("/add/{userId}/{friendId}")
+    @CollectRequests
     public Response addFriendGet(@PathParam("userId") Integer userId,
                                  @PathParam("friendId") Integer friendId) {
         return addFriend(userId, friendId);
@@ -128,6 +137,7 @@ public class UsersResource {
 
     @DELETE
     @Path("/remove/{userId}/{friendId}")
+    @CollectRequests
     public Response removeFriend(@PathParam("userId") Integer userId,
                                  @PathParam("friendId") Integer friendId) {
         Boolean success = usersBean.removeFriend(userId, friendId);

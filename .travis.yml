@@ -14,7 +14,7 @@ cache:
   - $HOME/.m2
 
 env:
-- DOCKER_IMAGE=40850473/service-users:1.0.7
+- DOCKER_IMAGE=40850473/service-users:1.1.7
 
 script:
 - mvn clean package -U
